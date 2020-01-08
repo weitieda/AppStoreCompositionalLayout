@@ -9,47 +9,6 @@
 import UIKit
 import TDTools
 
-class TodayHeader: UICollectionReusableView {
-    
-    static let id = "todayheader"
-    static let kind = "todayHeaderKind"
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        backgroundColor = .blue
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError()
-    }
-}
-
-class TodayCell: UICollectionViewCell {
-    
-    static let id = "todaycell"
-    
-    let imageView = UIImageView(backgroundColor: #colorLiteral(red: 0.3513580561, green: 0.7838454247, blue: 0.9800000787, alpha: 1))
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        contentView.addSubview(imageView)
-        imageView.fillSuperview()
-        
-        imageView.layer.cornerRadius = 10
-        imageView.layer.shadowColor = UIColor.lightGray.cgColor
-        imageView.layer.shadowRadius = 8
-        imageView.layer.shadowOpacity = 0.5
-        imageView.layer.shouldRasterize = true
-        imageView.layer.shadowOffset = CGSize(width: 0, height: 8)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError()
-    }
-}
-
 class TodayController: UIViewController, UICollectionViewDataSource {
     
     var collectionView: UICollectionView!
@@ -72,12 +31,13 @@ class TodayController: UIViewController, UICollectionViewDataSource {
         
         collectionView.register(TodayCell.self, forCellWithReuseIdentifier: TodayCell.id)
         collectionView.register(TodayHeader.self, forSupplementaryViewOfKind: TodayHeader.kind, withReuseIdentifier: TodayHeader.id)
+        collectionView.register(TodayFooter.self, forSupplementaryViewOfKind: TodayFooter.kind, withReuseIdentifier: TodayFooter.id)
         
         collectionView.dataSource = self
     }
     
     fileprivate func addTopNotchBlurView() {
-        let blurEffect = UIBlurEffect(style: .extraLight)
+        let blurEffect = UIBlurEffect(style: .systemMaterial)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         view.addSubview(blurEffectView)
         blurEffectView.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.topAnchor, trailing: view.trailingAnchor)
@@ -98,12 +58,13 @@ class TodayController: UIViewController, UICollectionViewDataSource {
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.5)), subitems: [item])
         group.interItemSpacing = .fixed(20)
         
-        let todayHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(50)), elementKind: TodayHeader.kind, alignment: .top)
+        let todayHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .estimated(50)), elementKind: TodayHeader.kind, alignment: .top)
+        let todayFooter = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .estimated(44)), elementKind: TodayFooter.kind, alignment: .bottom)
         
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = 20
         section.contentInsets = .init(top: 0, leading: 20, bottom: 0, trailing: 20)
-        section.boundarySupplementaryItems = [todayHeader]
+        section.boundarySupplementaryItems = [todayHeader, todayFooter]
         
         let config = UICollectionViewCompositionalLayoutConfiguration()
 //        config.interSectionSpacing = 20
@@ -116,9 +77,10 @@ class TodayController: UIViewController, UICollectionViewDataSource {
         if kind == TodayHeader.kind {
             let header = collectionView.dequeueReusableSupplementaryView(ofKind: TodayHeader.kind, withReuseIdentifier: TodayHeader.id, for: indexPath) as! TodayHeader
             return header
+        } else if kind == TodayFooter.kind {
+            let footer = collectionView.dequeueReusableSupplementaryView(ofKind: TodayFooter.kind, withReuseIdentifier: TodayFooter.id, for: indexPath) as! TodayFooter
+            return footer
         } else {
-//            let footer = collectionView.dequeueReusableSupplementaryView(ofKind: footerKind, withReuseIdentifier: SectionFooterView.id, for: indexPath) as! SectionFooterView
-//            footer.label.text = "footer: \(indexPath.section)"
             return UICollectionReusableView()
         }
     }
