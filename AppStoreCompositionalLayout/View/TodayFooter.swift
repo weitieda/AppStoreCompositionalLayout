@@ -14,7 +14,7 @@ class TodayFooter: UICollectionReusableView {
     static let id = "todayfooter"
     static let kind = "todayFooterKind"
     
-    let termsLabel = UILabel(text: "Terms & Conditions >", font: .preferredFont(forTextStyle: .callout), numberOfLines: 1, textColor: .systemGray)
+    let termsButton = UIButton(title: "Terms & Conditions >", titleColor: .systemGray, font: .preferredFont(forTextStyle: .callout))
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -22,10 +22,12 @@ class TodayFooter: UICollectionReusableView {
         let line = UIView(backgroundColor: .lightGray)
         line.constrainHeight(constant: 0.5)
         
+        termsButton.contentHorizontalAlignment = .left
+        
         vstack(
             UIView(),
             line,
-            termsLabel,
+            termsButton,
             spacing: 8
         ).fillSuperview(padding: .init(top: 0, left: 0, bottom: 8, right: 0))
         
