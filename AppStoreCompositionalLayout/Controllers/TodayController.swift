@@ -47,7 +47,7 @@ class TodayController: UIViewController, UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        return buttonTitles.count
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
