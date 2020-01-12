@@ -18,7 +18,7 @@ class MainTabBarController: UITabBarController {
             generateNavigationController(for: TodayController(), title: "Today", image: UIImage(named: "today")!),
             generateNavigationController(for: GamesController(), title: "Games", image: UIImage(named: "games")!),
             generateNavigationController(for: TodayController(), title: "Apps", image: UIImage(named: "apps")!),
-            generateNavigationController(for: TodayController(), title: "Games", image: UIImage(named: "games")!),
+            generateNavigationController(for: TodayController(), title: "Games", image: UIImage(named: "arcade")!),
             generateNavigationController(for: TodayController(), title: "Search", image: UIImage(named: "search")!),
         ]
         
