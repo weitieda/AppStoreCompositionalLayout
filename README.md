@@ -4,7 +4,7 @@ iOS 13 App Store clone using Compostional Layout
 
 ### Preview
 
-<img src="preview/today.gif" width="30%">
+![today](preview/today.gif)
 
 ### In Progress
 
