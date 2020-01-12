@@ -9,7 +9,7 @@
 import UIKit
 import TDTools
 
-class TodayController: UIViewController, UICollectionViewDataSource {
+class TodayController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
     var collectionView: UICollectionView!
     
@@ -37,6 +37,7 @@ class TodayController: UIViewController, UICollectionViewDataSource {
         collectionView.register(TodayButtonCell.self, forCellWithReuseIdentifier: TodayButtonCell.id)
         
         collectionView.dataSource = self
+        collectionView.delegate = self
     }
     
     fileprivate func addTopNotchBlurView() {
@@ -62,9 +63,17 @@ class TodayController: UIViewController, UICollectionViewDataSource {
         default:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayButtonCell.id, for: indexPath) as! TodayButtonCell
             cell.button.setTitle(buttonTitles[indexPath.item], for: .normal)
+            cell.didTap = { [weak self] in
+                self?.showAlert(title: self?.buttonTitles[indexPath.item] ?? "", message: "")
+            }
             return cell
         }
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        showAlert(title: "\(indexPath.section), \(indexPath.row)", message: "")
+    }
+    
     
     fileprivate func createLayout() -> UICollectionViewLayout {
         return UICollectionViewCompositionalLayout { (sectionIndex, env) -> NSCollectionLayoutSection? in
