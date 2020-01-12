@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "TDTools",
+        "repositoryURL": "https://github.com/weitieda/td-tools.git",
+        "state": {
+          "branch": null,
+          "revision": "59c8999737c0403eb8d6343e6c28079fbf4dbee0",
+          "version": "1.1.4"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
