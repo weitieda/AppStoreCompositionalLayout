@@ -8,12 +8,56 @@
 
 import UIKit
 
+class RedCell: UICollectionViewCell {
+    static let id = "insCell"
+    
+    let label = UILabel()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        backgroundColor = .red
+        
+        layer.borderColor = UIColor.green.cgColor
+        layer.borderWidth = 2
+        
+        contentView.addSubview(label)
+        label.centerInSuperview()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+class AppStoreHeaderView: UICollectionReusableView {
+    
+    static let id = "id"
+    
+    let label = UILabel()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        backgroundColor = .darkGray
+        
+        addSubview(label)
+        label.centerInSuperview()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
 class GamesController: UIViewController, UICollectionViewDataSource {
 
     var collectionView: UICollectionView!
+    let headerKind = "header"
+    let sections = ["Popular Games", "Top Apple Arcade Games", "New Games We love"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupCollectionView()
     }
     
@@ -27,15 +71,20 @@ class GamesController: UIViewController, UICollectionViewDataSource {
         return 10
     }
     
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return sections.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: headerKind, withReuseIdentifier: AppStoreHeaderView.id, for: indexPath) as! AppStoreHeaderView
+        header.label.text = sections[indexPath.section]
+        return header
+    }
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch indexPath.section {
-        case 0:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayCell.id, for: indexPath) as! TodayCell
-            return cell
-        default:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayButtonCell.id, for: indexPath) as! TodayButtonCell
-            return cell
-        }
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RedCell.id, for: indexPath) as! RedCell
+        cell.label.text = "\(indexPath.item)"
+        return cell
     }
     
     fileprivate func setupCollectionView() {
@@ -44,44 +93,54 @@ class GamesController: UIViewController, UICollectionViewDataSource {
         collectionView.backgroundColor = .systemBackground
         collectionView.fillSuperview()
         
-        collectionView.register(TodayCell.self, forCellWithReuseIdentifier: TodayCell.id)
-        collectionView.register(TodayHeader.self, forSupplementaryViewOfKind: TodayHeader.kind, withReuseIdentifier: TodayHeader.id)
-        collectionView.register(TodayFooter.self, forSupplementaryViewOfKind: TodayFooter.kind, withReuseIdentifier: TodayFooter.id)
-        collectionView.register(TodayButtonCell.self, forCellWithReuseIdentifier: TodayButtonCell.id)
+        collectionView.register(RedCell.self, forCellWithReuseIdentifier: RedCell.id)
+        collectionView.register(AppStoreHeaderView.self, forSupplementaryViewOfKind: headerKind, withReuseIdentifier: AppStoreHeaderView.id)
         
         collectionView.dataSource = self
     }
     
     
     fileprivate func createLayout() -> UICollectionViewLayout {
-         return UICollectionViewCompositionalLayout { (sectionIndex, env) -> NSCollectionLayoutSection? in
-             
-             let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))
-             
-             let group: NSCollectionLayoutGroup
-             if sectionIndex == 0 {
-                 group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.5)), subitems: [item])
-             } else {
-                 group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(44)), subitems: [item])
-             }
-             
-             let todayHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .estimated(50)), elementKind: TodayHeader.kind, alignment: .top)
-             let todayFooter = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .estimated(44)), elementKind: TodayFooter.kind, alignment: .bottom)
-             
-             let section = NSCollectionLayoutSection(group: group)
-             if sectionIndex == 0 {
-                 section.contentInsets = .init(top: 8, leading: 20, bottom: 0, trailing: 20)
-                 section.interGroupSpacing = 20
-                 section.boundarySupplementaryItems = [todayHeader]
-             } else if sectionIndex == 1 {
-                 section.contentInsets = .init(top: 30, leading: 20, bottom: 20, trailing: 20)
-                 section.interGroupSpacing = 8
-                 section.boundarySupplementaryItems = [todayFooter]
-             }
-             return section
-         }
-     }
-    
-    
+        return UICollectionViewCompositionalLayout { (sectionIndex, env) -> NSCollectionLayoutSection? in
+            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1.0))
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+            
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(0.85), heightDimension: .absolute(250)), subitems: [item])
+            //        group.interItemSpacing = .fixed(20)
+            
+            let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: .init(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44)), elementKind: self.headerKind, alignment: .top)
+            
+            let section = NSCollectionLayoutSection(group: group)
+            section.contentInsets = .init(top: 0, leading: 12, bottom: 0, trailing: 12)
+            section.interGroupSpacing = 20
+            section.orthogonalScrollingBehavior = .groupPaging
+            section.boundarySupplementaryItems = [header]
+            
+            return section
+        }
+    }
     
 }
+
+
+
+import SwiftUI
+
+struct MainPreview: PreviewProvider {
+    static var previews: some View {
+        ContainerView()
+    }
+    
+    struct ContainerView: UIViewControllerRepresentable {
+        typealias UIViewControllerType = GamesController
+        
+        func makeUIViewController(context: UIViewControllerRepresentableContext<MainPreview.ContainerView>) -> GamesController {
+            return GamesController()
+        }
+        
+        func updateUIViewController(_ uiViewController: GamesController, context: UIViewControllerRepresentableContext<MainPreview.ContainerView>) {
+            
+        }
+    }
+}
+
