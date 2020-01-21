@@ -49,6 +49,7 @@ class AppStoreHeaderView: UICollectionReusableView {
         fatalError("init(coder:) has not been implemented")
     }
 }
+
 class GamesController: UIViewController, UICollectionViewDataSource {
 
     var collectionView: UICollectionView!
