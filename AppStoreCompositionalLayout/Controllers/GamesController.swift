@@ -124,7 +124,6 @@ class GamesController: UIViewController, UICollectionViewDataSource {
 }
 
 
-
 import SwiftUI
 
 struct MainPreview: PreviewProvider {
